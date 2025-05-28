@@ -1,0 +1,68 @@
+import pytest
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+from pages.login_page import LoginPage
+from pages.dashboard_page import DashboardPage
+from pages.pim_page import PIMPage
+from pages.employee_list_page import EmployeeListPage
+
+class TestOrangeHRM:
+    
+    @pytest.fixture(scope="class")
+    def setup(self):
+        service = Service(ChromeDriverManager().install())
+        self.driver = webdriver.Chrome(service=service)
+        self.driver.maximize_window()
+        self.driver.get("https://opensource-demo.orangehrmlive.com/web/index.php/auth/login")
+        yield
+        self.driver.quit()
+    
+    def test_complete_workflow(self, setup):
+        # Initialize page objects
+        login_page = LoginPage(self.driver)
+        dashboard_page = DashboardPage(self.driver)
+        pim_page = PIMPage(self.driver)
+        employee_list_page = EmployeeListPage(self.driver)
+        
+        # Step 1: Login
+        login_page.login("Admin", "admin123")
+        
+        # Step 2: Navigate to PIM
+        dashboard_page.navigate_to_pim()
+        
+        # Step 3: Add multiple employees
+        employees_to_add = [
+            ("John", "Doe"),
+            ("Jane", "Smith"),
+            ("Mike", "Johnson"),
+            ("Sarah", "Wilson")
+        ]
+        
+        for first_name, last_name in employees_to_add:
+            pim_page.click_add_employee()
+            pim_page.add_employee(first_name, last_name)
+            time.sleep(2)  # Wait for save completion
+        
+        # Step 4: Verify employees in list
+        pim_page.navigate_to_employee_list()
+        
+        for first_name, last_name in employees_to_add:
+            full_name = f"{first_name} {last_name}"
+            employee_list_page.verify_employee_in_list(full_name)
+        
+        # Step 5: Logout
+        dashboard_page.logout()
+        
+        # Verify logout successful
+        assert "login" in self.driver.current_url.lower()
+
+    def test_login_with_invalid_credentials(self, setup):
+        login_page = LoginPage(self.driver)
+        login_page.login("invalid_user", "invalid_pass")
+        
+        error_message = login_page.get_error_message()
+        assert "Invalid credentials" in error_message
+
+if __name__ == "__main__":
+    pytest.main(["-v", "test_orangehrm.py"])
