@@ -12,28 +12,7 @@ This repository contains the QA assignment for testing the OrangeHRM web applica
 
 ## 📋 Assignment Objectives
 
-- Write manual test cases for login and employee management.
-- Identify bugs or usability issues.
-- Automate key workflows using Selenium and Page Object Model (POM).
+- To write manual test cases for login and employee management.
+- To identify bugs or usability issues.
+- To automate key workflows using Selenium and Page Object Model (POM).
 
----
-
-## 📂 Folder Structure
-
-orangehrm-automation/
-├── pages/
-│   ├── __init__.py
-│   ├── base_page.py
-│   ├── login_page.py
-│   ├── dashboard_page.py
-│   ├── pim_page.py
-│   └── employee_list_page.py
-├── tests/
-│   ├── __init__.py
-│   └── test_orangehrm.py
-├── utils/
-│   ├── __init__.py
-│   └── config.py
-├── requirements.txt
-├── pytest.ini
-└── README.md
