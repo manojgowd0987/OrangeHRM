@@ -1,0 +1,82 @@
+# Base Page Class
+class BasePage:
+    def __init__(self, driver):
+        self.driver = driver
+        self.wait = WebDriverWait(driver, 10)
+    
+    def wait_for_element(self, locator):
+        return self.wait.until(EC.presence_of_element_located(locator))
+    
+    def click_element(self, locator):
+        element = self.wait_for_element(locator)
+        element.click()
+    
+    def enter_text(self, locator, text):
+        element = self.wait_for_element(locator)
+        element.clear()
+        element.send_keys(text)
+
+# Login Page Class
+class LoginPage(BasePage):
+    # Locators
+    USERNAME_FIELD = (By.NAME, "username")
+    PASSWORD_FIELD = (By.NAME, "password")
+    LOGIN_BUTTON = (By.XPATH, "//button[@type='submit']")
+    ERROR_MESSAGE = (By.CLASS_NAME, "oxd-alert-content-text")
+    
+    def login(self, username, password):
+        self.enter_text(self.USERNAME_FIELD, username)
+        self.enter_text(self.PASSWORD_FIELD, password)
+        self.click_element(self.LOGIN_BUTTON)
+    
+    def get_error_message(self):
+        return self.wait_for_element(self.ERROR_MESSAGE).text
+
+# Dashboard Page Class
+class DashboardPage(BasePage):
+    # Locators
+    PIM_MENU = (By.XPATH, "//span[text()='PIM']")
+    USER_DROPDOWN = (By.CLASS_NAME, "oxd-userdropdown-tab")
+    LOGOUT_LINK = (By.XPATH, "//a[text()='Logout']")
+    
+    def navigate_to_pim(self):
+        pim_element = self.wait_for_element(self.PIM_MENU)
+        ActionChains(self.driver).move_to_element(pim_element).click().perform()
+    
+    def logout(self):
+        self.click_element(self.USER_DROPDOWN)
+        self.click_element(self.LOGOUT_LINK)
+
+# PIM Page Class
+class PIMPage(BasePage):
+    # Locators
+    ADD_EMPLOYEE_BUTTON = (By.XPATH, "//a[text()='Add Employee']")
+    EMPLOYEE_LIST_BUTTON = (By.XPATH, "//a[text()='Employee List']")
+    FIRST_NAME_FIELD = (By.NAME, "firstName")
+    LAST_NAME_FIELD = (By.NAME, "lastName")
+    SAVE_BUTTON = (By.XPATH, "//button[@type='submit']")
+    
+    def click_add_employee(self):
+        self.click_element(self.ADD_EMPLOYEE_BUTTON)
+    
+    def add_employee(self, first_name, last_name):
+        self.enter_text(self.FIRST_NAME_FIELD, first_name)
+        self.enter_text(self.LAST_NAME_FIELD, last_name)
+        self.click_element(self.SAVE_BUTTON)
+    
+    def navigate_to_employee_list(self):
+        self.click_element(self.EMPLOYEE_LIST_BUTTON)
+
+# Employee List Page Class
+class EmployeeListPage(BasePage):
+    # Locators
+    EMPLOYEE_ROWS = (By.XPATH, "//div[@class='oxd-table-row oxd-table-row--with-border']")
+    EMPLOYEE_NAME_CELLS = (By.XPATH, "//div[@class='oxd-table-cell'][3]")
+    
+    def verify_employee_in_list(self, employee_name):
+        employees = self.driver.find_elements(*self.EMPLOYEE_NAME_CELLS)
+        for employee in employees:
+            if employee_name in employee.text:
+                print(f"Name Verified: {employee_name}")
+                return True
+        return False
