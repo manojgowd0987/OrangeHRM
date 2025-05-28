@@ -20,18 +20,20 @@ This repository contains the QA assignment for testing the OrangeHRM web applica
 
 ## 📂 Folder Structure
 
-orangehrm-qa-assignment-2025/
-├── manual_testcases/
-│ └── login_testcases.xlsx
-│
-├── automation/
-│ ├── pages/
-│ │ ├── login_page.py
-│ │ ├── dashboard_page.py
-│ │ └── pim_page.py
-│ ├── tests/
-│ │ └── test_login.py
-│ └── conftest.py
-│
-├── README.md
-└── requirements.txt
+orangehrm-automation/
+├── pages/
+│   ├── __init__.py
+│   ├── base_page.py
+│   ├── login_page.py
+│   ├── dashboard_page.py
+│   ├── pim_page.py
+│   └── employee_list_page.py
+├── tests/
+│   ├── __init__.py
+│   └── test_orangehrm.py
+├── utils/
+│   ├── __init__.py
+│   └── config.py
+├── requirements.txt
+├── pytest.ini
+└── README.md
