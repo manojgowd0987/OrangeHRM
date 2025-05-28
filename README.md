@@ -1,6 +1,6 @@
-# OrangeHRM QA Assignment 2025
+# OrangeHRM QA 
 
-This repository contains the QA assignment for testing the OrangeHRM web application. It includes both **manual test cases** and **automated scripts** for validating the login functionality and employee management workflows.
+This repository contains the QA assignment for testing the OrangeHRM web application. It includes **automated scripts** for validating the login functionality and employee management workflows.
 
 ## 🔗 Live Application
 
